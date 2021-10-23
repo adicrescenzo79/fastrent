@@ -2,7 +2,7 @@ Vue.config.devtools = true;
 var app = new Vue({
     el: '#root',
     data: {
-
+        prodotti: [],
     },
     mounted() {
         this.apiCall('prodotti');
@@ -18,7 +18,8 @@ var app = new Vue({
             })
             .then((res) => {
                 if (res){
-                    console.log(res);
+                    console.log(res.data);
+                    this.prodotti = res.data;
                 } else {
                     console.log('res ma senza dati');
                 }

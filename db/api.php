@@ -3,14 +3,9 @@
 
     $tableChosen = $_GET['tableChosen'];
 
-    $table = 'prodotti';
-
-    $categoria = 'ALL-IN-ONE';
-    
-
     header('Content-Type: application/json');
 
-    $query = "SELECT * FROM `$table`";
+    $query = "SELECT * FROM `$tableChosen`";
 
     $researh = mysqli_query($myconn, $query) or die('Bad Query: '.$query);
 
@@ -20,10 +15,7 @@
         $result[] = $obj;
     };
     
-    print_r($result);
-
     if ($result) {
-        # code...
         echo json_encode($result);
     }
 

@@ -1,0 +1,40 @@
+main {
+    #scelta {
+        // background-color: blue;
+        width: 100vw;
+        // height: 500px;
+        height: calc(100vh - 108px);
+        .attivita {
+            height: 50vh;
+            border: 5px solid $primary-color;
+            border-radius: 10px;
+            cursor: pointer;
+            background-size: 160%;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: all 2s linear;
+            &:hover {
+                background-size: 200%;
+            }
+            h1 {
+                color: $primary-color;
+            }
+        }
+    }
+
+    .blur {
+        position: fixed;
+        bottom: 0;
+        width: 100vw;
+        height: calc(100vh - 108px);
+        background-color: rgba(255, 255, 255, 0.7);
+        z-index: 2;
+        backdrop-filter: blur(5px);
+        #calcolo{
+            form{
+                background-color: #fff;
+                
+            }
+        }
+    }
+}

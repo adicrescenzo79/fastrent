@@ -1,12 +1,15 @@
 header {
     font-weight: 700;
-    height: 108px;
-    .up {
-        border-bottom: 5px solid #ce1717;
-        background-color: #fff;
-        padding: 20px 0;
-        img {
-            width: 70%;
-        }
+    height: 12vh;
+   // border-bottom: 5px solid $primary-color;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    //padding: 20px 0;
+    img {
+        width: 70%;
     }
 }

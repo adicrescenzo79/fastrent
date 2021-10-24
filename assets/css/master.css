@@ -3,11 +3,23 @@ body {
   font-size: 20px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+a:hover {
+  color: inherit;
+}
+
 .my-btn {
   color: inherit;
   transition: all 0.1s linear;
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
 }
 .my-btn:hover {
   color: inherit;
@@ -16,14 +28,14 @@ body {
 .my-btn:hover i {
   transform: scale(1.1);
 }
-.my-btn.red {
-  background-color: #ce1717;
+.my-btn.primary-color {
+  background-color: #000;
   color: #fff;
 }
-.my-btn.red:hover {
-  border: 2px solid #ce1717;
+.my-btn.primary-color:hover, .my-btn.primary-color.active {
+  border: 1px solid #000;
   background-color: #fff;
-  color: #ce1717;
+  color: #000;
 }
 
 i {
@@ -35,24 +47,27 @@ i:hover {
 
 header {
   font-weight: 700;
-  height: 108px;
-}
-header .up {
-  border-bottom: 5px solid #ce1717;
+  height: 12vh;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
 }
-header .up img {
+header img {
   width: 70%;
 }
 
+main {
+  margin-top: 12vh;
+}
 main #scelta {
-  width: 100vw;
-  height: calc(100vh - 108px);
+  width: 100%;
+  height: 88vh;
 }
 main #scelta .attivita {
   height: 50vh;
-  border: 5px solid #ce1717;
+  border: 5px solid #000;
   border-radius: 10px;
   cursor: pointer;
   background-size: 160%;
@@ -64,18 +79,65 @@ main #scelta .attivita:hover {
   background-size: 200%;
 }
 main #scelta .attivita h1 {
-  color: #ce1717;
+  color: #000;
 }
 main .blur {
   position: fixed;
   bottom: 0;
   width: 100vw;
-  height: calc(100vh - 108px);
-  background-color: rgba(255, 255, 255, 0.7);
-  z-index: 2;
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
-}
-main .blur #calcolo form {
+  height: 87vh;
   background-color: #fff;
+  z-index: 2;
+}
+main .blur #calcolo .categorie .col-cat {
+  width: calc(20% - 4px);
+  margin: 2px;
+  font-size: 10px;
+}
+main .blur #calcolo .prodotti {
+  overflow-y: auto;
+  height: 70vh;
+}
+main .blur #calcolo .prodotti .flip-card {
+  font-size: 12px;
+  background-color: transparent;
+  width: 100%;
+  height: 300px;
+  perspective: 1000px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+main .blur #calcolo .prodotti .flip-card-inner {
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+main .blur #calcolo .prodotti .flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+main .blur #calcolo .prodotti .flip-card-front,
+main .blur #calcolo .prodotti .flip-card-back {
+  border-radius: 10px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+main .blur #calcolo .prodotti .flip-card-front {
+  background-color: #fff;
+  color: black;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+main .blur #calcolo .prodotti .flip-card-back {
+  background-color: #000;
+  color: white;
+  transform: rotateY(180deg);
 }

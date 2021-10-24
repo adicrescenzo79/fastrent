@@ -4,8 +4,14 @@ var app = new Vue({
     data: {
         prodotti: [],
         coefficienti: [],
-        section: 'calcolo', // rimettere ''
+        section: 'form', // rimettere ''
         categorie: [],
+        categoriesSelected: [],
+        form:{
+            productSelected: '',
+            name: '',
+            monthSelected: '',
+        }
     },
     mounted() {
         this.apiGet('prodotti');
@@ -13,6 +19,18 @@ var app = new Vue({
 
     },
     methods: {
+        selectProduct: function(product){
+            this.form.productSelected = product;
+            this.section = 'form';
+        },
+        selectCategory: function (categoria) {
+            if (this.categoriesSelected.includes(categoria)) {
+                this.categoriesSelected.splice(this.categoriesSelected.indexOf(categoria), 1);
+            } else {
+
+                this.categoriesSelected.push(categoria);
+            }
+        },
         apiGet: function (tableChosen) {
             axios({
                 method: 'get',
@@ -24,7 +42,7 @@ var app = new Vue({
             })
                 .then((res) => {
                     if (res) {
-                       // console.log(res.data);
+                        // console.log(res.data);
 
                         if (tableChosen === 'prodotti') {
 

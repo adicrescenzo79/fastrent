@@ -2,25 +2,82 @@ Vue.config.devtools = true;
 var app = new Vue({
     el: '#root',
     data: {
+        salesAgent: 'Caio Semproni',
         prodotti: [],
         coefficienti: [],
-        section: 'form', // rimettere ''
+        section: 'calcolo', // rimettere ''
         categorie: [],
         categoriesSelected: [],
-        form:{
-            productSelected: '',
+        form: {
+            productSelected: {},
             name: '',
             monthSelected: '',
-        }
+            coefficient: null,
+            monthlyFee: null,
+            totalFee: null,
+            securityDeposit: null,
+            salesAgent: this.salesAgent,
+        },
+        confirmation: '',
+        counted: false
     },
     mounted() {
         this.apiGet('prodotti');
         this.apiGet('coefficienti');
-
     },
     methods: {
-        selectProduct: function(product){
-            this.form.productSelected = product;
+        back: function (section) {
+            this.section = section;
+            this.counted = false;
+        },
+        calculate: function () {
+            this.coefficienti.forEach(element => {
+                if (element.Mesi === this.form.monthSelected) {
+                    this.form.coefficient = element.Coefficiente;
+                };
+            });
+            this.form.monthlyFee = this.form.productSelected.Prezzo * 1.3 * this.form.coefficient / 100;
+
+            this.form.totalFee = this.form.monthlyFee * this.form.monthSelected;
+
+            this.form.securityDeposit = this.form.totalFee * 10 / 100;
+
+            this.counted = true;
+        },
+        goOn: function (action) {
+            switch (action) {
+                case 'cancel':
+                    this.section = '';
+                    this.form = {
+                        productSelected: {},
+                        name: '',
+                        monthSelected: '',
+                        coefficient: null,
+                        monthlyFee: null,
+                        totalFee: null,
+                        securityDeposit: null,
+                        salesAgent: this.salesAgent,
+                    },
+                        this.categoriesSelected = [];
+                    this.confirmation = '';
+                    this.counted = false;
+
+
+                    break;
+
+                case 'save':
+
+                    //  SCRIVERE L'API POST X REGISTRARE
+
+                    break;
+
+
+                default:
+                    break;
+            }
+        },
+        selectProduct: function (product) {
+            this.form.productSelected = this.prodotti[product];
             this.section = 'form';
         },
         selectCategory: function (categoria) {

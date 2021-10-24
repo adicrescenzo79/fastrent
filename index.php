@@ -71,7 +71,7 @@
 
             </section>
 
-            <section @click.self="section=''" class="blur" v-if="section !== ''">
+            <section class="blur" v-if="section !== ''">
 
                 <section class="" v-if="section === 'calcolo'" id="calcolo">
                     <div class="container position-relative">
@@ -108,8 +108,7 @@
                                             <p class="pr-2 pl-2">{{prodotto.Caratteristiche}}</p>
                                             <span>{{prodotto.Prezzo + ' €'}}</span>
                                             <a :href="prodotto.Pagina">Pagina prodotto</a>
-                                            <a @click="selectProduct(prodotto.id)"
-                                                class="my-btn primary-color">Scegli</a>
+                                            <a @click="selectProduct(i)" class="my-btn primary-color">Scegli</a>
                                         </div>
                                     </div>
                                 </div>
@@ -123,29 +122,82 @@
                 <section class="mt-5" v-else-if="section === 'form'" id="form">
 
                     <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2>Calcolo del canone:</h2>
+                        <div class="row pb-5">
+                            <div class="col-md-4 ">
+
+                                <a @click="back('calcolo')" class="my-btn primary-color ">
+                                    <i class="fas fa-angle-double-left mr-5"></i>
+                                    <span>Indietro</span>
+                                </a>
                             </div>
-                            <form action="col-md-12 row">
+
+                            <div class="col-md-4">
+
+                                <a @click="confirmation='cancel'" class="my-btn primary-color ">
+                                    <i class="fas fa-remove-format mr-5"></i> <span>Annulla l'operazione</span>
+                                </a>
+
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-12 pb-3 d-flex">
+                                <h2>Calcolo del canone per:</h2>
+                                <h2 class="font-weight-bolder ml-5">{{form.productSelected.Modello}}</h2>
+                            </div>
+                            <form action="" class="col-md-12 row">
                                 <div class="form-group col-md-6">
                                     <label for="name">Nome o Ragione Sociale</label>
-                                    <input type="text" class="form-control" id="name">
+                                    <input v-model="form.name" type="text" class="form-control" id="name">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="month">Example select</label>
-                                    <select class="form-control" id="month">
-                                      <option>1</option>
-                                      <option>2</option>
-                                      <option>3</option>
-                                      <option>4</option>
-                                      <option>5</option>
+                                    <label for="month">Scegli i mesi di durata del noleggio</label>
+                                    <select v-model="form.monthSelected" class="form-control" id="month">
+                                        <option disabled value=""></option>
+                                        <option v-for="(coefficiente, i) in coefficienti">
+                                            {{parseInt(coefficiente.Mesi)}}</option>
                                     </select>
-                                  </div>
+                                </div>
+                                <div v-if="form.name && form.monthSelected && !counted"
+                                    class="form-group col-md-6 offset-md-6 text-right">
+                                    <a @click="calculate()" class="my-btn primary-color ">
+                                        <span>Calcola</span>
+                                        <i class="fas fa-angle-double-right ml-5 mt-5"></i>
+                                    </a>
+
+
+                                </div>
 
                             </form>
+                            <div v-if="counted" class="col-md-12 row mt-5">
+
+                                <div class="col-md-6 pb-3 d-flex">
+                                    <h2>Deposito cauzionale:</h2>
+                                    <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit * 100) /
+                                        100).toFixed(2) + ' €'}}</h2>
+                                </div>
+                                <div class="col-md-6 pb-3 d-flex">
+                                    <h2>Canone mensile:</h2>
+                                    <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.monthlyFee * 100) /
+                                        100).toFixed(2) + ' €'}}</h2>
+                                </div>
+                                <div class="col-md-6 pb-3 d-flex">
+                                    <a @click="confirmation='save'" class="my-btn primary-color ">
+                                        <span>Registra operazione</span>
+                                        <i class="fas fa-download ml-5"></i>  </a>                         
+                                </div>
+
+
+
+                            </div>
+
                         </div>
+
                     </div>
+
+
 
                 </section>
 
@@ -154,6 +206,20 @@
 
                 </section>
             </section>
+
+            <div v-if="confirmation !== ''" class="modal-blur">
+
+                <div class="my-modal text-center">
+                    <p>Confermi?</p>
+                    <div class="buttons d-flex justify-content-around">
+                        <div @click="goOn(confirmation)" class="col-md-3 my-btn primary-color">Si</div>
+                        <div @click="confirmation=''" class="col-md-3 my-btn primary-color">No
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
         </main>
 

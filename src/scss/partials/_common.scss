@@ -9,27 +9,24 @@ body {
     box-sizing: border-box;
 }
 
-a{
+a {
     color: inherit;
-    &:hover{
+    &:hover {
         color: inherit;
-        
     }
 }
 
-.my-btn {
+.my-btn,
+a.my-btn {
     color: inherit;
     transition: all 0.1s linear;
-    padding: 10px;
+    padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
 
     &:hover {
         color: inherit;
         text-decoration: none;
-        i {
-            transform: scale(1.1);
-        }
     }
     &.primary-color {
         background-color: $primary-color;
@@ -43,9 +40,35 @@ a{
     }
 }
 
-i {
-    transition: all 0.1s linear;
-    &:hover {
-        transform: scale(1.5);
+.modal-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($color: #fff, $alpha: 0.53);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    .my-modal {
+        background-color: #fff;
+        width: 30%;
+        padding: 20px 30px;
+        border-radius: 10px;
+        border: 1px solid $primary-color;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: fadein 1s;
     }
 }
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+

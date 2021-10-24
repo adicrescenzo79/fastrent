@@ -14,37 +14,74 @@ a:hover {
   color: inherit;
 }
 
-.my-btn {
+.my-btn,
+a.my-btn {
   color: inherit;
   transition: all 0.1s linear;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 10px;
   cursor: pointer;
 }
-.my-btn:hover {
+.my-btn:hover,
+a.my-btn:hover {
   color: inherit;
   text-decoration: none;
 }
-.my-btn:hover i {
-  transform: scale(1.1);
-}
-.my-btn.primary-color {
+.my-btn.primary-color,
+a.my-btn.primary-color {
   background-color: #000;
   color: #fff;
 }
-.my-btn.primary-color:hover, .my-btn.primary-color.active {
+.my-btn.primary-color:hover, .my-btn.primary-color.active,
+a.my-btn.primary-color:hover,
+a.my-btn.primary-color.active {
   border: 1px solid #000;
   background-color: #fff;
   color: #000;
 }
 
-i {
-  transition: all 0.1s linear;
+.modal-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.53);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  z-index: 10;
 }
-i:hover {
-  transform: scale(1.5);
+.modal-blur .my-modal {
+  background-color: #fff;
+  width: 30%;
+  padding: 20px 30px;
+  border-radius: 10px;
+  border: 1px solid #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-animation: fadein 1s;
+          animation: fadein 1s;
 }
 
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 header {
   font-weight: 700;
   height: 12vh;

@@ -6,26 +6,6 @@
     $tableChosen = $_GET['tableChosen'];
 
     // prova
-    // $tableChosen = 'coefficienti_prodotti';
-
-    // $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES (2, 14, 'gino', 'marcello', 1, now())";
-
-    // $newRecord = mysqli_query($myconn, $query) or die('Bad Query: '.$query);
-    // ;
-
-    // echo json_encode($query);     return;
-
-
-
-    // if ($newRecord) {
-    //     echo "Inserito correttamente";
-    // } else {
-    //     echo json_encode("Error: " . $query . "<br>" . mysqli_error($conn));
-    // }
-
-    // return;
-
-
     // fineprova
 
     switch ($method) {
@@ -56,14 +36,31 @@
 
             if ($tableChosen==='coefficienti_prodotti') {
 
-                $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES (2, 14, 'gino', 'marcello', 1, now())";
+                //  echo $tableChosen; return;
+
+
+                $coefficienti_id = $_GET['coefficienti_id'];
+
+                $prodotti_id = $_GET['prodotti_id'];
+
+                $agente = $_GET['agente'];
+
+                $cliente = $_GET['cliente'];
+
+                $accettazione = $_GET['accettazione'];
+
+                $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES ($coefficienti_id,  $prodotti_id, '$cliente', '$agente', $accettazione, now())";
+              
+
             }
 
             $newRecord = mysqli_query($myconn, $query);
-        
-        
+
+            $success = false;
+
             if ($newRecord) {
-                echo "Inserito correttamente";
+                $success = true;
+                echo $success;
               } else {
                 echo json_encode("Error: " . $query . "<br>" . mysqli_error($conn));
               }

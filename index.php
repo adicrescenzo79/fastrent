@@ -238,7 +238,7 @@
 
             <div v-if="confirmation !== ''" class="modal-blur">
 
-                <div class="my-modal text-center">
+                <div v-if="confirmation === 'cancel' || confirmation === 'save'" class="my-modal text-center">
                     <p>Confermi?</p>
                     <div class="buttons d-flex justify-content-around">
                         <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">Si</div>
@@ -246,6 +246,11 @@
                         </div>
                     </div>
                 </div>
+
+                <div v-else-if="confirmation === 'stored'" class="my-modal d-flex justify-content-center align-items-center">
+                    <p>Elemento registrato</p>
+                </div>
+
             </div>
 
 

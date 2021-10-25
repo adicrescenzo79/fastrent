@@ -93,7 +93,13 @@ var app = new Vue({
                             },
                         })
                             .then((res) => {
-                                console.log(res.data);
+                               if (res) {
+                                this.confirmation = 'stored';
+                                console.log(this.confirmation);
+                                setTimeout(() => {
+                                    this.confirmation = '';
+                                }, 2000);
+                               }
 
                             })
                             .catch((err) => {

@@ -59,7 +59,7 @@
 
                         </div>
                         <div class="col-md-6">
-                            <div @click="section='dash'" class="attivita"
+                            <div @click="dashboard()" class="attivita"
                                 style="background-image: url('./assets/img/new-data-services-Ar-iTL4QKl4-unsplash.jpg');">
                                 <h1 class="mt-2 ml-2">Dashboard</h1>
 
@@ -171,10 +171,11 @@
                                 </div>
 
                                 <div v-if="counted" class="col-md-12 row mt-5 justify-content-between">
-    
+
                                     <div class="col-md-6 pb-5 d-flex">
                                         <h2>Deposito cauzionale:</h2>
-                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit * 100) /
+                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit *
+                                            100) /
                                             100).toFixed(2) + ' €'}}</h2>
                                     </div>
                                     <div class="col-md-6 pb-5 d-flex">
@@ -200,13 +201,13 @@
                                             </label>
                                         </div>
                                     </div>
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
                                     <div v-if="form.acceptance!==null" class="col-md-6 pb-3 d-flex justify-content-end">
                                         <div>
 
@@ -216,9 +217,9 @@
                                             </a>
                                         </div>
                                     </div>
-    
-    
-    
+
+
+
                                 </div>
                             </form>
 
@@ -232,7 +233,7 @@
 
 
                 <section class="mt-5" v-else-if="section === 'dash'" id="dash">
-
+                    <canvas id="myChart"></canvas>
                 </section>
             </section>
 
@@ -241,13 +242,15 @@
                 <div v-if="confirmation === 'cancel' || confirmation === 'save'" class="my-modal text-center">
                     <p>Confermi?</p>
                     <div class="buttons d-flex justify-content-around">
-                        <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">Si</div>
+                        <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">
+                            Si</div>
                         <div @click="confirmation=''" class="col-md-3 my-btn primary-color">No
                         </div>
                     </div>
                 </div>
 
-                <div v-else-if="confirmation === 'stored'" class="my-modal d-flex justify-content-center align-items-center">
+                <div v-else-if="confirmation === 'stored'"
+                    class="my-modal d-flex justify-content-center align-items-center">
                     <p>Elemento registrato</p>
                 </div>
 
@@ -260,6 +263,7 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

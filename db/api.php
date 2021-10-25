@@ -14,9 +14,15 @@
         case 'get':
 
             header('Content-Type: application/json');
-        
-            $query = "SELECT * FROM `$tableChosen`";
-        
+
+            if ($tableChosen==='coefficienti_prodotti'){
+
+                $query = "SELECT * FROM coefficienti_prodotti AS CP, prodotti AS P, coefficienti as C WHERE CP.prodotti_id = P.id AND CP.coefficienti_id = C.id";
+
+            } else {
+                $query = "SELECT * FROM `$tableChosen`";
+            }
+
             $researh = mysqli_query($myconn, $query) or die('Bad Query: '.$query);
         
             $result = array();
@@ -28,6 +34,7 @@
             if ($result) {
                 echo json_encode($result);
             }
+
         break;
 
         case 'store':

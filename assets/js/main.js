@@ -4,9 +4,8 @@ var app = new Vue({
     data: {
         prodotti: [],
         coefficienti: [],
-        section: 'calcolo', // rimettere ''
-        categorie: [],
-        categoriesSelected: [],
+        section: '',
+        coefficienti_prodotti: [],
         form: {
             productSelected: {},
             name: '',
@@ -19,13 +18,62 @@ var app = new Vue({
             acceptance: null,
         },
         confirmation: '',
-        counted: false
+        counted: false,
+        categorie: [],
+        categoriesSelected: [],
     },
     mounted() {
         this.apiGet('prodotti');
         this.apiGet('coefficienti');
+        this.apiGet('coefficienti_prodotti');
     },
     methods: {
+        loadChart: function () {
+
+            // <block:setup:1>
+            const labels = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+            ];
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: 'My First dataset',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 10, 5, 2, 20, 30, 45],
+                }]
+            };
+            // </block:setup>
+
+            // <block:config:0>
+            const config = {
+                type: 'line',
+                data: data,
+                options: {}
+            };
+            // </block:config>
+
+            //   module.exports = {
+            //     actions: [],
+            //     config: config,
+            //   };
+
+
+            myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+        },
+        dashboard: function () {
+            this.section = 'dash';
+            this.loadChart();
+        },
         back: function (section) {
             this.section = section;
             this.counted = false;
@@ -89,17 +137,19 @@ var app = new Vue({
                                 cliente: this.form.customer,
                                 agente: this.form.salesAgent,
                                 accettazione: this.form.acceptance,
-                                
+
                             },
                         })
                             .then((res) => {
-                               if (res) {
-                                this.confirmation = 'stored';
-                                console.log(this.confirmation);
-                                setTimeout(() => {
-                                    this.confirmation = '';
-                                }, 2000);
-                               }
+                                if (res) {
+                                    this.confirmation = 'stored';
+                                    console.log(this.confirmation);
+                                    setTimeout(() => {
+                                        this.confirmation = '';
+                                        this.goOn('cancel');
+                                        this.apiGet('coefficienti_prodotti');
+                                    }, 2000);
+                                }
 
                             })
                             .catch((err) => {
@@ -156,6 +206,8 @@ var app = new Vue({
 
                         } else if (tableChosen === 'coefficienti') {
                             this.coefficienti = res.data;
+                        } else if (tableChosen === 'coefficienti_prodotti') {
+                            this.coefficienti_prodotti = res.data;
                         }
 
                     } else {

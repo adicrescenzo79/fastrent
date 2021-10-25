@@ -134,7 +134,7 @@
                             <div class="col-md-4">
 
                                 <a @click="confirmation='cancel'" class="my-btn primary-color ">
-                                    <i class="fas fa-remove-format mr-5"></i> <span>Annulla l'operazione</span>
+                                    <i class="fas fa-remove-format mr-5"></i> <span>Annulla operazione</span>
                                 </a>
 
 
@@ -150,7 +150,7 @@
                             <form action="" class="col-md-12 row">
                                 <div class="form-group col-md-6">
                                     <label for="name">Nome o Ragione Sociale</label>
-                                    <input v-model="form.name" type="text" class="form-control" id="name">
+                                    <input v-model="form.customer" type="text" class="form-control" id="name">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="month">Scegli i mesi di durata del noleggio</label>
@@ -160,7 +160,7 @@
                                             {{parseInt(coefficiente.Mesi)}}</option>
                                     </select>
                                 </div>
-                                <div v-if="form.name && form.monthSelected && !counted"
+                                <div v-if="form.customer && form.monthSelected && !counted"
                                     class="form-group col-md-6 offset-md-6 text-right">
                                     <a @click="calculate()" class="my-btn primary-color ">
                                         <span>Calcola</span>
@@ -170,28 +170,57 @@
 
                                 </div>
 
+                                <div v-if="counted" class="col-md-12 row mt-5 justify-content-between">
+    
+                                    <div class="col-md-6 pb-5 d-flex">
+                                        <h2>Deposito cauzionale:</h2>
+                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit * 100) /
+                                            100).toFixed(2) + ' €'}}</h2>
+                                    </div>
+                                    <div class="col-md-6 pb-5 d-flex">
+                                        <h2>Canone mensile:</h2>
+                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.monthlyFee * 100) /
+                                            100).toFixed(2) + ' €'}}</h2>
+                                    </div>
+
+                                    <div class="acceptance col-md-6 row">
+
+                                        <div class="form-check col-md-12 pb-3 d-flex align-items-center">
+                                            <input v-model="form.acceptance" class="form-check-input" type="radio"
+                                                id="acceptance" value="true" unchecked>
+                                            <label class="form-check-label" for="acceptance">
+                                                Preventivo accettato
+                                            </label>
+                                        </div>
+                                        <div class="form-check col-md-12 pb-3 d-flex align-items-center">
+                                            <input v-model="form.acceptance" class="form-check-input" type="radio"
+                                                id="refusal" value="false" unchecked>
+                                            <label class="form-check-label" for="refusal">
+                                                Preventivo rifiutato
+                                            </label>
+                                        </div>
+                                    </div>
+    
+    
+    
+    
+    
+    
+    
+                                    <div v-if="form.acceptance!==null" class="col-md-6 pb-3 d-flex justify-content-end">
+                                        <div>
+
+                                            <a @click="confirmation='save'" class="my-btn primary-color ">
+                                                <span>Registra operazione</span>
+                                                <i class="fas fa-download ml-5"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+    
+    
+    
+                                </div>
                             </form>
-                            <div v-if="counted" class="col-md-12 row mt-5">
-
-                                <div class="col-md-6 pb-3 d-flex">
-                                    <h2>Deposito cauzionale:</h2>
-                                    <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit * 100) /
-                                        100).toFixed(2) + ' €'}}</h2>
-                                </div>
-                                <div class="col-md-6 pb-3 d-flex">
-                                    <h2>Canone mensile:</h2>
-                                    <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.monthlyFee * 100) /
-                                        100).toFixed(2) + ' €'}}</h2>
-                                </div>
-                                <div class="col-md-6 pb-3 d-flex">
-                                    <a @click="confirmation='save'" class="my-btn primary-color ">
-                                        <span>Registra operazione</span>
-                                        <i class="fas fa-download ml-5"></i>  </a>                         
-                                </div>
-
-
-
-                            </div>
 
                         </div>
 
@@ -212,7 +241,7 @@
                 <div class="my-modal text-center">
                     <p>Confermi?</p>
                     <div class="buttons d-flex justify-content-around">
-                        <div @click="goOn(confirmation)" class="col-md-3 my-btn primary-color">Si</div>
+                        <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">Si</div>
                         <div @click="confirmation=''" class="col-md-3 my-btn primary-color">No
                         </div>
                     </div>

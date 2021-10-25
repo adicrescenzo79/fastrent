@@ -2,7 +2,6 @@ Vue.config.devtools = true;
 var app = new Vue({
     el: '#root',
     data: {
-        salesAgent: 'Caio Semproni',
         prodotti: [],
         coefficienti: [],
         section: 'calcolo', // rimettere ''
@@ -16,7 +15,8 @@ var app = new Vue({
             monthlyFee: null,
             totalFee: null,
             securityDeposit: null,
-            salesAgent: this.salesAgent,
+            salesAgent: 'Caio Semproni',
+            acceptance: null,
         },
         confirmation: '',
         counted: false
@@ -44,22 +44,23 @@ var app = new Vue({
 
             this.counted = true;
         },
-        goOn: function (action) {
+        goOn: function (action, tableChosen) {
             switch (action) {
                 case 'cancel':
                     this.section = '';
                     this.form = {
                         productSelected: {},
-                        name: '',
+                        customer: '',
                         monthSelected: '',
                         coefficient: null,
                         monthlyFee: null,
                         totalFee: null,
                         securityDeposit: null,
                         salesAgent: this.salesAgent,
-                    },
-                        this.categoriesSelected = [];
-                    this.confirmation = '';
+                        acceptance: null,
+
+                    };
+                    this.categoriesSelected = [];
                     this.counted = false;
 
 
@@ -67,14 +68,50 @@ var app = new Vue({
 
                 case 'save':
 
-                    //  SCRIVERE L'API POST X REGISTRARE
+                    if (tableChosen) {
+
+                        var coefficienti_id = '';
+
+                        this.coefficienti.forEach(element => {
+                            if (element.Mesi === this.form.monthSelected) {
+                                coefficienti_id = element.id;
+                            };
+                        });
+
+                        axios({
+                            method: 'post',
+                            url: window.location.origin + '/fastrent/db/api.php',
+                            params: {
+                                tableChosen: tableChosen,
+                                method: 'store',
+                                coefficienti_id: coefficienti_id,
+                                prodotti_id: this.form.productSelected.id,
+                                cliente: this.form.customer,
+                                agente: this.form.salesAgent,
+                                accettazione: this.form.acceptance,
+                                
+                            },
+                        })
+                            .then((res) => {
+                                console.log(res.data);
+
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+
+                    } else {
+                        console.log('manca la tabella');
+                    }
 
                     break;
 
 
                 default:
                     break;
-            }
+            };
+            this.confirmation = '';
+
         },
         selectProduct: function (product) {
             this.form.productSelected = this.prodotti[product];

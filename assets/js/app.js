@@ -1,4 +1,5 @@
 Vue.config.devtools = true;
+
 var app = new Vue({
     el: '#root',
     data: {
@@ -24,6 +25,32 @@ var app = new Vue({
     mounted() {
         this.apiGet('prodotti');
         this.apiGet('coefficienti');
+
+        //faker
+
+        // var faker = require("faker");
+
+
+        // // Initializing our variables with a different random data each time it is run
+        // var randomName = faker.name.findName(); // Generates a random name
+        // var randomEmail = faker.internet.email(); // Generates a random email
+        // var randomProduct = faker.commerce.productName(); // Generates a random product name
+        // var randomCompany = faker.company.companyName(); // Will give back a random company name
+        // var randomCard = faker.helpers.createCard(); // It's output is a random contact card containing many properties
+
+        // // Iteration
+        // // This code runs twenty times
+        // // It produces each time different data
+        // for (i = 0; i < 20; i++) {
+        //     console.log(randomName); // Outputs a random name
+        //     console.log(randomEmail); // Outputs a random email
+        //     console.log(randomProduct); // Outputs the random product name generated
+        //     console.log(randomCompany); // Produces a random company name
+        //     console.log(randomCard); // Gives back a random card
+        //     console.log(faker.date.past()); // Generates a random past date
+        // }
+
+        //endfaker
     },
     methods: {
         back: function (section) {
@@ -89,17 +116,17 @@ var app = new Vue({
                                 cliente: this.form.customer,
                                 agente: this.form.salesAgent,
                                 accettazione: this.form.acceptance,
-                                
+
                             },
                         })
                             .then((res) => {
-                               if (res) {
-                                this.confirmation = 'stored';
-                                console.log(this.confirmation);
-                                setTimeout(() => {
-                                    this.confirmation = '';
-                                }, 2000);
-                               }
+                                if (res) {
+                                    this.confirmation = 'stored';
+                                    console.log(this.confirmation);
+                                    setTimeout(() => {
+                                        this.confirmation = '';
+                                    }, 2000);
+                                }
 
                             })
                             .catch((err) => {

@@ -56,8 +56,20 @@
 
                 $accettazione = $_GET['accettazione'];
 
-                $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES ($coefficienti_id,  $prodotti_id, '$cliente', '$agente', $accettazione, now())";
-              
+                
+                
+                
+                if (isset($_GET['fakeDate'])) {
+                    
+                    $fakeDate = $_GET['fakeDate'];
+                    
+                    $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES ($coefficienti_id,  $prodotti_id, '$cliente', '$agente', $accettazione, '$fakeDate')";
+                    
+                } else {
+
+                    $query = "INSERT INTO $tableChosen (coefficienti_id, prodotti_id, cliente, agente, accettazione, created_at) VALUES ($coefficienti_id,  $prodotti_id, '$cliente', '$agente', $accettazione, now())";
+                }
+                
 
             }
 

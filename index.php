@@ -49,6 +49,7 @@
                         <div class="col-md-12">
 
                             <h1 class="mb-5">Ciao Agente, cosa devi fare oggi?</h1>
+                             <!-- <button @click="fakeData()">faker</button>  -->
                         </div>
                         <div class="col-md-6">
                             <div @click="section='calcolo'" class="attivita "
@@ -233,10 +234,28 @@
 
 
                 <section class="mt-5" v-else-if="section === 'dash'" id="dash">
-                    <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">
-                        Si</div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
 
-                    <canvas id="myChart"></canvas>
+                                <!-- <a @click="loadChart()" class="col-md-3 my-btn primary-color">
+                                    Carica </a> -->
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="myChart"></canvas>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <canvas id="myChart2"></canvas>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
                 </section>
             </section>
 
@@ -266,6 +285,8 @@
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js" integrity="sha512-bwD3VD/j6ypSSnyjuaURidZksoVx3L1RPvTkleC48SbHCZsemT3VKMD39KknPnH728LLXVMTisESIBOAb5/W0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

@@ -28,9 +28,65 @@ var app = new Vue({
         this.apiGet('coefficienti_prodotti');
     },
     methods: {
+        fakeData: function () {
+
+            for (let i = 0; i < 100; i++) {
+
+                let info = faker.helpers.createCard();
+
+                let { name } = info;
+
+                let bool = [0, 1];
+
+                var now = dayjs();
+
+                var fakerData = 0;
+
+                fakerData = faker.date.past(1, now);
+
+              // console.log(now);
+
+                fakerData = dayjs(fakerData).format('YYYY-MM-DD HH:mm:ss');
+
+              // console.log(fakerData);
+
+              //  return
+
+                axios({
+                    method: 'post',
+                    url: window.location.origin + '/fastrent/db/api.php',
+                    params: {
+                        tableChosen: 'coefficienti_prodotti',
+                        method: 'store',
+                        coefficienti_id: this.random_item(this.coefficienti).id,
+                        prodotti_id: this.random_item(this.prodotti).id,
+                        cliente: name,
+                        agente: this.form.salesAgent,
+                        accettazione: this.random_item(bool),
+                        fakeDate: fakerData,
+                    },
+                })
+                    .then((res) => {
+                        if (res) {
+                            console.log(res.data);
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+
+            }
+
+
+
+        },
+        random_item: function (items) {
+            return items[Math.floor(Math.random() * items.length)];
+        },
         loadChart: function () {
 
-            // <block:setup:1>
+            // ANDAMENTO GENERALE
             const labels = [
                 'January',
                 'February',
@@ -42,37 +98,58 @@ var app = new Vue({
             const data = {
                 labels: labels,
                 datasets: [{
-                    label: 'My First dataset',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: [0, 10, 5, 2, 20, 30, 45],
                 }]
             };
-            // </block:setup>
-
-            // <block:config:0>
             const config = {
                 type: 'line',
                 data: data,
                 options: {}
             };
-            // </block:config>
-
-            //   module.exports = {
-            //     actions: [],
-            //     config: config,
-            //   };
-
 
             myChart = new Chart(
                 document.getElementById('myChart'),
                 config
             );
 
+            // ANDAMENTO GENERALE
+            const data2 = {
+                labels: [
+                    'Red',
+                    'Blue',
+                    'Yellow'
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 50, 100],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+
+            const config2 = {
+                type: 'doughnut',
+                data: data2,
+            };
+
+            myChart2 = new Chart(
+                document.getElementById('myChart2'),
+                config2
+            );
+
+
         },
         dashboard: function () {
             this.section = 'dash';
-            this.loadChart();
+            setTimeout(() => {
+                this.loadChart();
+            }, 1000);
         },
         back: function (section) {
             this.section = section;
@@ -205,9 +282,32 @@ var app = new Vue({
                             });
 
                         } else if (tableChosen === 'coefficienti') {
+
                             this.coefficienti = res.data;
+
                         } else if (tableChosen === 'coefficienti_prodotti') {
-                            this.coefficienti_prodotti = res.data;
+
+                            //  this.coefficienti_prodotti = res.data;
+                            var table = res.data;
+
+                            table.map(item => {
+
+                                var canoneMensile = item.Prezzo * 1.3 * item.Coefficiente / 100;
+
+                                var canoneTotale = canoneMensile * item.Mesi;
+
+                                var deposito = canoneTotale * 10 / 100;
+
+                                var money = {
+                                    canoneMensile: (Math.ceil(canoneMensile * 100) / 100).toFixed(2),
+                                    canoneTotale: (Math.ceil(canoneTotale * 100) / 100).toFixed(2),
+                                    deposito: (Math.ceil(deposito * 100) / 100).toFixed(2),
+                                };
+
+                                item = { ...item, ...money };
+
+                                this.coefficienti_prodotti.push(item);
+                            })
                         }
 
                     } else {

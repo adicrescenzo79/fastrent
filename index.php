@@ -233,6 +233,9 @@
 
 
                 <section class="mt-5" v-else-if="section === 'dash'" id="dash">
+                    <div @click="goOn(confirmation, 'coefficienti_prodotti')" class="col-md-3 my-btn primary-color">
+                        Si</div>
+
                     <canvas id="myChart"></canvas>
                 </section>
             </section>

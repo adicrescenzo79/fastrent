@@ -244,14 +244,6 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 text-center" v-for="(valore, i) in valori">
-
-                                <a v-if="yearChosen" @click="carica(valore)" class="my-btn primary-color">
-                                    {{valore}} </a>
-
-                            </div>
-                        </div>
 
                         <div class="col-md-12">
                             <canvas id="myChart"></canvas>

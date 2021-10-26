@@ -23,10 +23,27 @@ var app = new Vue({
         categoriesSelected: [],
         years: [],
         yearChosen: '',
-        preventivoByYear: [],
+        preventiviByYear: [],
         valoreChosen: '',
-        valori: ['canoneMensile', 'canoneTotale'],
-        months: [],
+        months: [
+            'Gennaio',
+            'Febbraio',
+            'Marzo',
+            'Aprile',
+            'Maggio',
+            'Giugno',
+            'Luglio',
+            'Agosto',
+            'Settembre',
+            'Ottobre',
+            'Novembre',
+            'Dicembre',
+        ],
+        canoniTotali: [],
+        startArray: [],
+        perMeseTotali: [],
+        perMeseAccettati: [],
+        perMeseRifiutati: [],
     },
     mounted() {
         this.apiGet('prodotti');
@@ -93,12 +110,13 @@ var app = new Vue({
         },
         carica: function (valore) {
 
-            
+
             if (this.valoreChosen) {
                 myChart.destroy();
             }
-            
+
             this.valoreChosen = valore;
+
 
             const data = {
                 labels: this.months,
@@ -115,16 +133,27 @@ var app = new Vue({
                 options: {
                     parsing: {
                         xAxisKey: 'month',
-                        yAxisKey: this.valoreChosen
+                        yAxisKey: 'this.valoreChosen'
                     }
                 }
             };
-            console.log(config);
+            //  console.log(config);
 
             myChart = new Chart(
                 document.getElementById('myChart'),
                 config
             );
+
+        },
+        groupBy: function (objectArray, property) {
+            return objectArray.reduce(function (acc, obj) {
+                let key = obj[property]
+                if (!acc[key]) {
+                    acc[key] = []
+                }
+                acc[key].push(obj)
+                return acc
+            }, {})
 
         },
 
@@ -134,66 +163,65 @@ var app = new Vue({
             // DATI ISTOGRAMMA
             this.yearChosen = year;
 
-            this.preventivoByYear = this.coefficienti_prodotti.filter(obj => obj.year == this.yearChosen && obj.accettazione);
+            this.preventiviByYear = this.coefficienti_prodotti.filter(obj => obj.year == this.yearChosen);
+
+            let preventiviByYearBMonth = this.groupBy(this.preventiviByYear, 'month');
 
 
-            var helper = {};
-            var result = this.preventivoByYear.reduce(function (r, o) {
-                var key = o.month;
 
-                if (!helper[key]) {
-                    helper[key] = Object.assign({}, o); // create a copy of o
-                    r.push(helper[key]);
-                } else {
-                    helper[key].canoneMensile += o.canoneMensile;
-                    helper[key].canoneTotale += o.canoneTotale;
 
-                }
 
-                return r;
-            }, []);
+            for (const key in preventiviByYearBMonth) {
+                var totale = 0;
+                preventiviByYearBMonth[key].forEach(item => {
+                    if (item.accettazione) {
+                        totale = totale + item.canoneTotale;
+                    }
+                })
+                let obj = {
+                    month: key,
+                    totale: Number(totale.toFixed(2)),
+                };
 
-            this.preventivoByYear = result;
+                this.perMeseAccettati.push(obj);
+            }
 
-            var result = [];
-            var helper = {};
-            this.months.forEach((month, i) => {
-                helper = {
-                    month: month,
-                    canoneMensile: 0,
-                    canoneTotale: 0,
+            for (const key in preventiviByYearBMonth) {
+                var totale = 0;
+                preventiviByYearBMonth[key].forEach(item => {
+                    if (!item.accettazione) {
+                        totale = totale + item.canoneTotale;
+                    }
+                })
+                let obj = {
+                    month: key,
+                    totale: Number(totale.toFixed(2)),
+                };
 
-                    monthNr: i + 1,
+                this.perMeseRifiutati.push(obj);
+            }
 
-                }
-                result.push(helper);
-            });
 
-            this.startArray = result;
-
-            var result = [];
-            var helper = {};
-
-            this.startArray.forEach((start, i) => {
-                this.preventivoByYear.forEach((order, j) => {
-                    if (start.month == order.month) {
-                        start.canoneMensile = order.canoneMensile;
-                        start.canoneTotale = order.canoneTotale;
-
+            var appoggio = [];
+            this.months.forEach((mese, i) => {
+                this.perMeseAccettati.forEach((prev, j)=>{
+                    if (prev.month != mese) {
+                        let obj = {
+                            month: mese,
+                            totale: 0
+                        }
+                        appoggio.push(obj);
                     }
                 });
 
             });
 
-            this.preventivoByYear = this.startArray;
-            console.log(this.preventivoByYear);
+           // console.log(this.perMeseAccettati);
+           // console.log(this.perMeseRifiutati);
 
 
-            this.preventivoByYear.forEach((order, i) => {
-                this.canoneMensile.push(order.canoneMensile);
-                this.canoneTotale.push(order.canoneTotale);
 
-            });
+
 
             this.labels = this.months;
 
@@ -386,9 +414,9 @@ var app = new Vue({
                                 var deposito = canoneTotale * 10 / 100;
 
                                 var money = {
-                                    canoneMensile: (Math.ceil(canoneMensile * 100) / 100).toFixed(2),
-                                    canoneTotale: (Math.ceil(canoneTotale * 100) / 100).toFixed(2),
-                                    deposito: (Math.ceil(deposito * 100) / 100).toFixed(2),
+                                    canoneMensile: Number((Math.ceil(canoneMensile * 100) / 100).toFixed(2)),
+                                    canoneTotale: Number((Math.ceil(canoneTotale * 100) / 100).toFixed(2)),
+                                    deposito: Number((Math.ceil(deposito * 100) / 100).toFixed(2)),
                                 };
 
                                 item = { ...item, ...money };
@@ -460,6 +488,7 @@ var app = new Vue({
                             });
 
                             this.coefficienti_prodotti = newPreventivi;
+
 
                         }
 

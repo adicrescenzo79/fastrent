@@ -21,6 +21,12 @@ var app = new Vue({
         counted: false,
         categorie: [],
         categoriesSelected: [],
+        years: [],
+        yearChosen: '',
+        preventivoByYear: [],
+        valoreChosen: '',
+        valori: ['canoneMensile', 'canoneTotale'],
+        months: [],
     },
     mounted() {
         this.apiGet('prodotti');
@@ -30,7 +36,7 @@ var app = new Vue({
     methods: {
         fakeData: function () {
 
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 200; i++) {
 
                 let info = faker.helpers.createCard();
 
@@ -42,15 +48,15 @@ var app = new Vue({
 
                 var fakerData = 0;
 
-                fakerData = faker.date.past(1, now);
+                fakerData = faker.date.past(3, now);
 
-              // console.log(now);
+                // console.log(now);
 
                 fakerData = dayjs(fakerData).format('YYYY-MM-DD HH:mm:ss');
 
-              // console.log(fakerData);
+                // console.log(fakerData);
 
-              //  return
+                //  return
 
                 axios({
                     method: 'post',
@@ -81,40 +87,119 @@ var app = new Vue({
 
 
         },
+
         random_item: function (items) {
             return items[Math.floor(Math.random() * items.length)];
         },
-        loadChart: function () {
+        carica: function (valore) {
 
-            // ANDAMENTO GENERALE
-            const labels = [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-            ];
+            
+            if (this.valoreChosen) {
+                myChart.destroy();
+            }
+            
+            this.valoreChosen = valore;
+
             const data = {
-                labels: labels,
+                labels: this.months,
                 datasets: [{
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45],
+                    label: 'Incasso mensile',
+                    backgroundColor: '#3e9920',
+                    borderColor: '#3e9920',
+                    data: this.preventivoByYear,
                 }]
             };
             const config = {
                 type: 'line',
-                data: data,
-                options: {}
+                data,
+                options: {
+                    parsing: {
+                        xAxisKey: 'month',
+                        yAxisKey: this.valoreChosen
+                    }
+                }
             };
+            console.log(config);
 
             myChart = new Chart(
                 document.getElementById('myChart'),
                 config
             );
 
-            // ANDAMENTO GENERALE
+        },
+
+
+        loadChart: function (year) {
+
+            // DATI ISTOGRAMMA
+            this.yearChosen = year;
+
+            this.preventivoByYear = this.coefficienti_prodotti.filter(obj => obj.year == this.yearChosen && obj.accettazione);
+
+
+            var helper = {};
+            var result = this.preventivoByYear.reduce(function (r, o) {
+                var key = o.month;
+
+                if (!helper[key]) {
+                    helper[key] = Object.assign({}, o); // create a copy of o
+                    r.push(helper[key]);
+                } else {
+                    helper[key].canoneMensile += o.canoneMensile;
+                    helper[key].canoneTotale += o.canoneTotale;
+
+                }
+
+                return r;
+            }, []);
+
+            this.preventivoByYear = result;
+
+            var result = [];
+            var helper = {};
+            this.months.forEach((month, i) => {
+                helper = {
+                    month: month,
+                    canoneMensile: 0,
+                    canoneTotale: 0,
+
+                    monthNr: i + 1,
+
+                }
+                result.push(helper);
+            });
+
+            this.startArray = result;
+
+            var result = [];
+            var helper = {};
+
+            this.startArray.forEach((start, i) => {
+                this.preventivoByYear.forEach((order, j) => {
+                    if (start.month == order.month) {
+                        start.canoneMensile = order.canoneMensile;
+                        start.canoneTotale = order.canoneTotale;
+
+                    }
+                });
+
+            });
+
+            this.preventivoByYear = this.startArray;
+            console.log(this.preventivoByYear);
+
+
+            this.preventivoByYear.forEach((order, i) => {
+                this.canoneMensile.push(order.canoneMensile);
+                this.canoneTotale.push(order.canoneTotale);
+
+            });
+
+            this.labels = this.months;
+
+
+
+            // TORTA
             const data2 = {
                 labels: [
                     'Red',
@@ -148,7 +233,7 @@ var app = new Vue({
         dashboard: function () {
             this.section = 'dash';
             setTimeout(() => {
-                this.loadChart();
+                //  this.loadChart();
             }, 1000);
         },
         back: function (section) {
@@ -287,10 +372,12 @@ var app = new Vue({
 
                         } else if (tableChosen === 'coefficienti_prodotti') {
 
-                            //  this.coefficienti_prodotti = res.data;
-                            var table = res.data;
 
-                            table.map(item => {
+                            var preventivi = res.data;
+
+                            preventivi.map(item => {
+
+                                item.created_at = item.created_at.slice(0, 7);
 
                                 var canoneMensile = item.Prezzo * 1.3 * item.Coefficiente / 100;
 
@@ -308,6 +395,72 @@ var app = new Vue({
 
                                 this.coefficienti_prodotti.push(item);
                             })
+
+                            var newPreventivi = [];
+
+
+                            this.coefficienti_prodotti.forEach((preventivo, i) => {
+                                let month = preventivo.created_at.split('-')[1];
+                                let year = preventivo.created_at.split('-')[0];
+
+                                preventivo = {
+                                    ...preventivo,
+                                    month: month,
+                                    year: year,
+                                }
+
+
+                                if (!this.years.includes(year)) {
+
+                                    this.years.push(year);
+                                }
+                                this.years = this.years.sort();
+
+                                switch (preventivo.month) {
+                                    case '01':
+                                        preventivo.month = 'Gennaio';
+                                        break;
+                                    case '02':
+                                        preventivo.month = 'Febbraio';
+                                        break;
+                                    case '03':
+                                        preventivo.month = 'Marzo';
+                                        break;
+                                    case '04':
+                                        preventivo.month = 'Aprile';
+                                        break;
+                                    case '05':
+                                        preventivo.month = 'Maggio';
+                                        break;
+                                    case '06':
+                                        preventivo.month = 'Giugno';
+                                        break;
+                                    case '07':
+                                        preventivo.month = 'Luglio';
+                                        break;
+                                    case '08':
+                                        preventivo.month = 'Agosto';
+                                        break;
+                                    case '09':
+                                        preventivo.month = 'Settembre';
+                                        break;
+                                    case '10':
+                                        preventivo.month = 'Ottobre';
+                                        break;
+                                    case '11':
+                                        preventivo.month = 'Novembre';
+                                        break;
+                                    case '12':
+                                        preventivo.month = 'Dicembre';
+                                        break;
+                                }
+
+                                newPreventivi.push(preventivo)
+
+                            });
+
+                            this.coefficienti_prodotti = newPreventivi;
+
                         }
 
                     } else {

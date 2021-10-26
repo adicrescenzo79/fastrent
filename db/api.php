@@ -17,7 +17,7 @@
 
             if ($tableChosen==='coefficienti_prodotti'){
 
-                $query = "SELECT * FROM coefficienti_prodotti AS CP, prodotti AS P, coefficienti as C WHERE CP.prodotti_id = P.id AND CP.coefficienti_id = C.id";
+                $query = "SELECT * FROM coefficienti_prodotti AS CP INNER JOIN prodotti AS P ON CP.prodotti_id = P.id INNER JOIN coefficienti AS C ON C.id = CP.coefficienti_id";
 
             } else {
                 $query = "SELECT * FROM `$tableChosen`";

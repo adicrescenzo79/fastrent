@@ -1,14 +1,14 @@
 main {
-  //  height: calc(100vh - 120px);
-  margin-top: 12vh;
+    //  height: calc(100vh - 120px);
+    margin-top: 12vh;
     #scelta {
         // background-color: blue;
 
         width: 100%;
         height: 88vh;
-       // height: calc(100vh - 108px);
+        // height: calc(100vh - 108px);
         .attivita {
-            height: 50vh;
+            height: 30vh; // height: 50vh;
             border: 5px solid $primary-color;
             border-radius: 10px;
             cursor: pointer;
@@ -16,6 +16,9 @@ main {
             background-repeat: no-repeat;
             background-position: center;
             transition: all 2s linear;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
             &:hover {
                 background-size: 200%;
             }
@@ -25,26 +28,28 @@ main {
         }
     }
 
+    
+
     .blur {
         position: fixed;
         bottom: 0;
         width: 100vw;
         height: 87vh;
-      //  background-color: rgba(255, 255, 255, 0.7);
-        background-color:#fff;
+        //  background-color: rgba(255, 255, 255, 0.7);
+        background-color: #fff;
 
         z-index: 2;
-      //  backdrop-filter: blur(5px);
+        //  backdrop-filter: blur(5px);
 
         #calcolo {
             //  background-color: #fff;
-           
+
             .categorie {
                 // position: fixed;
                 // top: 12vh;
                 // width: 100vw;
                 .col-cat {
-                    width: calc(20% - 4px);
+                    width: calc(100% / 2 - 4px);
                     margin: 2px;
                     font-size: 10px;
                 }
@@ -52,8 +57,6 @@ main {
             .prodotti {
                 overflow-y: auto;
                 height: 70vh;
-
-
 
                 .flip-card {
                     font-size: 12px;
@@ -105,6 +108,39 @@ main {
                     color: white;
                     transform: rotateY(180deg);
                 }
+            }
+        }
+        #form{
+            height: 88vh;
+            overflow-y: auto;
+        }
+    }
+}
+
+@media (min-width: 576px) { 
+    main .blur #calcolo .categorie .col-cat{
+        width: calc(100% / 4 - 4px);
+
+    }
+ }
+
+@media (min-width: 992px) { 
+    .categorie {
+        .col-cat {
+            width: calc(20% - 4px);
+            margin: 2px;
+            font-size: 10px;
+        }
+    }
+
+
+ }
+
+@media (min-width: 1200px) {
+    main {
+        #scelta {
+            .attivita {
+                height: 50vh;
             }
         }
     }

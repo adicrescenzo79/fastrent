@@ -14,6 +14,10 @@ a:hover {
   color: inherit;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .my-btn,
 a.my-btn {
   color: inherit;
@@ -53,7 +57,7 @@ a.my-btn.primary-color.active {
 }
 .modal-blur .my-modal {
   background-color: #fff;
-  width: 30%;
+  width: 60%;
   padding: 20px 30px;
   border-radius: 10px;
   border: 1px solid #000;
@@ -82,6 +86,11 @@ a.my-btn.primary-color.active {
     opacity: 1;
   }
 }
+@media (min-width: 992px) {
+  .my-modal {
+    width: 30%;
+  }
+}
 header {
   font-weight: 700;
   height: 12vh;
@@ -92,7 +101,7 @@ header {
   width: 100vw;
 }
 header img {
-  width: 70%;
+  width: 60%;
 }
 
 main {
@@ -103,7 +112,7 @@ main #scelta {
   height: 88vh;
 }
 main #scelta .attivita {
-  height: 50vh;
+  height: 30vh;
   border: 5px solid #000;
   border-radius: 10px;
   cursor: pointer;
@@ -111,6 +120,9 @@ main #scelta .attivita {
   background-repeat: no-repeat;
   background-position: center;
   transition: all 2s linear;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 main #scelta .attivita:hover {
   background-size: 200%;
@@ -127,7 +139,7 @@ main .blur {
   z-index: 2;
 }
 main .blur #calcolo .categorie .col-cat {
-  width: calc(20% - 4px);
+  width: calc(50% - 4px);
   margin: 2px;
   font-size: 10px;
 }
@@ -177,4 +189,26 @@ main .blur #calcolo .prodotti .flip-card-back {
   background-color: #000;
   color: white;
   transform: rotateY(180deg);
+}
+main .blur #form {
+  height: 88vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 576px) {
+  main .blur #calcolo .categorie .col-cat {
+    width: calc(25% - 4px);
+  }
+}
+@media (min-width: 992px) {
+  .categorie .col-cat {
+    width: calc(20% - 4px);
+    margin: 2px;
+    font-size: 10px;
+  }
+}
+@media (min-width: 1200px) {
+  main #scelta .attivita {
+    height: 50vh;
+  }
 }

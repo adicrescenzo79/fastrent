@@ -24,18 +24,15 @@
         <header>
             <div class="container h-100">
                 <div class="row justify-content-around align-items-center align-items-center h-100">
-                    <div class="col-md-4 logo text-center">
-                        <img src="./assets/img/logo.png" alt="logo fastrent">
+                    <div class="col-md-6 col-6 logo text-center">
+                        <img class="pointer" src="./assets/img/logo.png" alt="logo fastrent">
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-md-6 col-6 text-center">
 
-                        <a class="primary-color my-btn" href="tel:+390690286124"><i
-                                class="fas fa-phone-alt mr-1"></i></i>0690286124</a>
-                    </div>
-                    <div class="col-md-4 text-center">
-
-                        <a class="primary-color my-btn" href="mailto:info@fastrent.it"><i
-                                class="fas fa-envelope mr-1"></i>info@fastrent.it</a>
+                        <a class="primary-color my-btn" @click="home()">
+                            <i class="fas fa-home mr-1"></i>
+                            Home
+                        </a>
                     </div>
                 </div>
 
@@ -51,18 +48,18 @@
                             <h1 class="mb-5">Ciao Agente, cosa devi fare oggi?</h1>
                             <!-- <button @click="fakeData()">faker</button>  -->
                         </div>
-                        <div class="col-md-6">
-                            <div @click="section='calcolo'" class="attivita "
+                        <div class="col-md-12 col-lg-6 mt-3">
+                            <div @click="section='calcolo'" class="attivita"
                                 style="background-image: url('./assets/img/andras-vas-Bd7gNnWJBkU-unsplash.jpg');">
-                                <h1 class="mt-2 ml-2">Nuovo preventivo</h1>
+                                <h1 class="mm-2 mr-2">Nuovo preventivo</h1>
 
                             </div>
 
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12 col-lg-6 mt-3">
                             <div @click="dashboard()" class="attivita"
                                 style="background-image: url('./assets/img/new-data-services-Ar-iTL4QKl4-unsplash.jpg');">
-                                <h1 class="mt-2 ml-2">Dashboard</h1>
+                                <h1 class="mm-2 mr-2">Dashboard</h1>
 
                             </div>
 
@@ -77,9 +74,13 @@
                 <section class="" v-if="section === 'calcolo'" id="calcolo">
                     <div class="container position-relative">
 
-                        <div class="pt-5 pb-5 row  categorie justify-content-between">
-                            <div class="col-cat">
-                                <div class="my-btn primary-color text-center pointer" @click="categoriesSelected=[]">
+                        <button @click="filtro = true" v-if="!filtro" class="my-btn primary-color mt-3">Filtro
+                            Categorie</button>
+
+                        <div v-if="filtro" class="pt-5 pb-5 row  categorie justify-content-between">
+                            <div class="col-cat filtro">
+                                <div class="my-btn primary-color text-center pointer"
+                                    @click="categoriesSelected=[]; filtro=false">
                                     <span class="categoria text-uppercase font-weight-bolder ">
                                         << resetta filtro>>
                                     </span>
@@ -95,7 +96,7 @@
                         </div>
 
                         <div class="row prodotti pb-5">
-                            <div v-for="(prodotto, i) in prodotti" :key="i" class="col-md-3"
+                            <div v-for="(prodotto, i) in prodotti" :key="i" class="col-md-4 col-lg-3"
                                 v-if="categoriesSelected.includes(prodotto.Categoria) || (categoriesSelected.length === 0)">
                                 <div class="flip-card mt-5 pointer">
                                     <div class="flip-card-inner ">
@@ -120,11 +121,11 @@
 
                 </section>
 
-                <section class="mt-5" v-else-if="section === 'form'" id="form">
+                <section class="bt-5" v-else-if="section === 'form'" id="form">
 
                     <div class="container">
-                        <div class="row pb-5">
-                            <div class="col-md-4 ">
+                        <div class="row pb-5 text-center">
+                            <div class="col-md-6  col-12 mt-5">
 
                                 <a @click="back('calcolo')" class="my-btn primary-color ">
                                     <i class="fas fa-angle-double-left mr-5"></i>
@@ -132,7 +133,7 @@
                                 </a>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6 col-12 mt-5">
 
                                 <a @click="confirmation='cancel'" class="my-btn primary-color ">
                                     <i class="fas fa-remove-format mr-5"></i> <span>Annulla operazione</span>
@@ -144,16 +145,16 @@
                         </div>
                         <div class="row">
 
-                            <div class="col-md-12 pb-3 d-flex">
-                                <h2>Calcolo del canone per:</h2>
-                                <h2 class="font-weight-bolder ml-5">{{form.productSelected.Modello}}</h2>
+                            <div class="col-md-12 pb-3 d-flex flex-wrap text-center">
+                                <h2 class="col-md-12 col-lg-6">Calcolo del canone per:</h2>
+                                <h2 class="font-weight-bolder col-md-12 col-lg-6">{{form.productSelected.Modello}}</h2>
                             </div>
                             <form action="" class="col-md-12 row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12 col-lg-6">
                                     <label for="name">Nome o Ragione Sociale</label>
                                     <input v-model="form.customer" type="text" class="form-control" id="name">
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12 col-lg-6">
                                     <label for="month">Scegli i mesi di durata del noleggio</label>
                                     <select v-model="form.monthSelected" class="form-control" id="month">
                                         <option disabled value=""></option>
@@ -171,17 +172,17 @@
 
                                 </div>
 
-                                <div v-if="counted" class="col-md-12 row mt-5 justify-content-between">
+                                <div v-if="counted" class="col-md-12 row mt-5 justify-content-center">
 
-                                    <div class="col-md-6 pb-5 d-flex">
-                                        <h2>Deposito cauzionale:</h2>
-                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.securityDeposit *
+                                    <div class="col-lg-12 col-xl-6 pb-5 d-flex flex-wrap text-center">
+                                        <h2 class="col-md-6 col-12">Deposito cauzionale:</h2>
+                                        <h2 class="col-md-6 col-12 font-weight-bolder ">{{(Math.ceil(this.form.securityDeposit *
                                             100) /
                                             100).toFixed(2) + ' €'}}</h2>
                                     </div>
-                                    <div class="col-md-6 pb-5 d-flex">
-                                        <h2>Canone mensile:</h2>
-                                        <h2 class="font-weight-bolder ml-5">{{(Math.ceil(this.form.monthlyFee * 100) /
+                                    <div class="col-lg-12 col-xl-6 pb-5 d-flex flex-wrap text-center">
+                                        <h2 class="col-md-6 col-12">Canone mensile:</h2>
+                                        <h2 class="col-md-6 col-12 font-weight-bolder ">{{(Math.ceil(this.form.monthlyFee * 100) /
                                             100).toFixed(2) + ' €'}}</h2>
                                     </div>
 
@@ -204,17 +205,12 @@
                                     </div>
 
 
-
-
-
-
-
-                                    <div v-if="form.acceptance!==null" class="col-md-6 pb-3 d-flex justify-content-end">
+                                    <div v-if="form.acceptance!==null" class="col-md-6 col-12 pb-3 d-flex justify-content-end">
                                         <div>
 
                                             <a @click="confirmation='save'" class="my-btn primary-color ">
                                                 <span>Registra operazione</span>
-                                                <i class="fas fa-download ml-5"></i>
+                                                <i class="fas fa-download ml-2"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -235,26 +231,35 @@
 
                 <section class="mt-5" v-else-if="section === 'dash'" id="dash">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-md-3 text-center" v-for="(year, i) in years">
+                        <div class="row justify-content-center text-center">
+                            <div class="col-md-3 col-6 text-center mt-5" v-for="(year, i) in years">
 
-                                <a @click="loadChart(year)" class="my-btn primary-color">
+                                <a @click="chooseYear(year)" class="my-btn primary-color">
                                     {{year}} </a>
 
                             </div>
+
+
+                            <div class="col-md-12 mt-5">
+                                <canvas id="myChart"></canvas>
+
+                            </div>
+
+                            <div v-if="yearChosen" class="col-md-12 mt-5">
+                                <h3>Preventivi rifiutati nel {{yearChosen}} per €
+                                    {{Number(annoTotRifiutati).toFixed(2)}}
+                                </h3>
+
+                            </div>
+                            <div v-if="yearChosen" class="col-md-12 mt-5">
+                                <h3>Preventivi accettati nel {{yearChosen}} per €
+                                    {{Number(annoTotAccettati).toFixed(2)}}
+                                </h3>
+
+                            </div>
+
                         </div>
 
-
-                        <div class="col-md-12">
-                            <canvas id="myChart"></canvas>
-
-                        </div>
-
-                        <div class="col-md-6">
-                            <canvas id="myChart2"></canvas>
-
-                        </div>
-                        <!--   -->
 
 
                     </div>

@@ -44,13 +44,30 @@ var app = new Vue({
         perMeseTotali: [],
         perMeseAccettati: [],
         perMeseRifiutati: [],
+        annoTotAccettati: null,
+        annoTotRifiutati: null,
+        update: false,
+        filtro: false,
     },
     mounted() {
         this.apiGet('prodotti');
         this.apiGet('coefficienti');
         this.apiGet('coefficienti_prodotti');
     },
+    // watch:{
+    //     chartData: function(newSi, oldSi, newNo, oldNo){
+
+    // },
     methods: {
+        home: function(){
+            this.section = '';
+            if (this.update) {
+                
+                myChart.destroy();
+                this.yearChosen = '';
+                this.update = false;
+            }
+        },
         fakeData: function () {
 
             for (let i = 0; i < 200; i++) {
@@ -104,45 +121,102 @@ var app = new Vue({
 
 
         },
-
         random_item: function (items) {
             return items[Math.floor(Math.random() * items.length)];
         },
-        carica: function (valore) {
-
-
-            if (this.valoreChosen) {
-                myChart.destroy();
-            }
-
-            this.valoreChosen = valore;
-
+        carica: function () {
 
             const data = {
                 labels: this.months,
-                datasets: [{
-                    label: 'Incasso mensile',
-                    backgroundColor: '#3e9920',
-                    borderColor: '#3e9920',
-                    data: this.preventivoByYear,
-                }]
+                datasets: [
+                    {
+                        label: 'Totale preventivi Accettati x mese',
+                        backgroundColor: '#3e9920',
+                        borderColor: '#3e9920',
+                        data: this.perMeseAccettati,
+                    },
+                    {
+                        label: 'Totale preventivi Rifiutati x mese',
+                        backgroundColor: 'red',
+                        borderColor: 'red',
+                        data: this.perMeseRifiutati,
+                    },
+
+                ],
+
             };
+
+
             const config = {
                 type: 'line',
                 data,
                 options: {
+                    responsive: true,
                     parsing: {
                         xAxisKey: 'month',
-                        yAxisKey: 'this.valoreChosen'
+                        yAxisKey: 'totale'
                     }
                 }
             };
-            //  console.log(config);
+            //  copia
 
-            myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
+
+            // copia
+
+            console.log(this.update);
+
+
+            if (this.update) {
+                myChart.data.datasets[0].data = [];
+                myChart.data.datasets[1].data = [];
+                myChart.update();
+
+                myChart.data.datasets[0].data = this.perMeseAccettati;
+                myChart.data.datasets[1].data = this.perMeseRifiutati;
+                myChart.update();
+            } else {
+
+                myChart = new Chart(
+                    document.getElementById('myChart'),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: this.months,
+                            datasets: [
+                                {
+                                    label: 'Totale preventivi Accettati x mese',
+                                    backgroundColor: '#3e9920',
+                                    borderColor: '#3e9920',
+                                    data: this.perMeseAccettati,
+                                },
+                                {
+                                    label: 'Totale preventivi Rifiutati x mese',
+                                    backgroundColor: 'red',
+                                    borderColor: 'red',
+                                    data: this.perMeseRifiutati,
+                                },
+
+                            ],
+
+                        },
+                        options: {
+                            responsive: true,
+                            parsing: {
+                                xAxisKey: 'month',
+                                yAxisKey: 'totale'
+                            }
+                        }
+                    },
+                );
+
+                this.update = true;
+            }
+
+
+
+
+
+
 
         },
         groupBy: function (objectArray, property) {
@@ -156,21 +230,28 @@ var app = new Vue({
             }, {})
 
         },
+        chooseYear: function (year) {
 
-
-        loadChart: function (year) {
-
-            // DATI ISTOGRAMMA
             this.yearChosen = year;
 
+            this.loadChart();
+
+        },
+        loadChart: function () {
+
+
+            console.log(this.yearChosen);
+
             this.preventiviByYear = this.coefficienti_prodotti.filter(obj => obj.year == this.yearChosen);
+
+
 
             let preventiviByYearBMonth = this.groupBy(this.preventiviByYear, 'month');
 
 
 
 
-
+            var annoTot = 0;
             for (const key in preventiviByYearBMonth) {
                 var totale = 0;
                 preventiviByYearBMonth[key].forEach(item => {
@@ -183,9 +264,15 @@ var app = new Vue({
                     totale: Number(totale.toFixed(2)),
                 };
 
+                annoTot += obj.totale;
+
                 this.perMeseAccettati.push(obj);
             }
 
+            this.annoTotAccettati = annoTot;
+
+
+            var annoTot = 0;
             for (const key in preventiviByYearBMonth) {
                 var totale = 0;
                 preventiviByYearBMonth[key].forEach(item => {
@@ -198,71 +285,86 @@ var app = new Vue({
                     totale: Number(totale.toFixed(2)),
                 };
 
+                annoTot += obj.totale;
+
+
                 this.perMeseRifiutati.push(obj);
             }
+            this.annoTotRifiutati = annoTot;
+
 
 
             var appoggio = [];
             this.months.forEach((mese, i) => {
-                this.perMeseAccettati.forEach((prev, j)=>{
-                    if (prev.month != mese) {
-                        let obj = {
-                            month: mese,
-                            totale: 0
-                        }
-                        appoggio.push(obj);
+                let index = this.perMeseAccettati.findIndex(prev => prev.month == mese);
+                //  console.log(index);
+
+                let obj = {};
+
+                if (index < 0) {
+                    obj = {
+                        month: mese,
+                        totale: 0,
+                        monthNr: i + 1,
                     }
-                });
+                } else {
+                    obj = {
+                        month: mese,
+                        totale: this.perMeseAccettati[index].totale,
+                        monthNr: i + 1,
+                    }
+                }
 
+                appoggio.push(obj);
             });
-
-           // console.log(this.perMeseAccettati);
-           // console.log(this.perMeseRifiutati);
+            this.perMeseAccettati = appoggio;
 
 
 
+            var appoggio = [];
+            this.months.forEach((mese, i) => {
+                let index = this.perMeseRifiutati.findIndex(prev => prev.month == mese);
+                //  console.log(index);
 
+                let obj = {};
 
-            this.labels = this.months;
+                if (index < 0) {
+                    obj = {
+                        month: mese,
+                        totale: 0,
+                        monthNr: i + 1,
+                    }
+                } else {
+                    obj = {
+                        month: mese,
+                        totale: this.perMeseRifiutati[index].totale,
+                        monthNr: i + 1,
+                    }
+                }
 
+                appoggio.push(obj);
+            });
+            this.perMeseRifiutati = appoggio;
 
+            // this.labels = this.months;
 
-            // TORTA
-            const data2 = {
-                labels: [
-                    'Red',
-                    'Blue',
-                    'Yellow'
-                ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [300, 50, 100],
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    hoverOffset: 4
-                }]
-            };
+            if (this.yearChosen) {
+                const actions = [
+                    {
+                        name: 'Change Data',
+                        henler(myChart) {
+                            myChart.update();
+                        }
+                    }
+                ]
+            }
 
-            const config2 = {
-                type: 'doughnut',
-                data: data2,
-            };
-
-            myChart2 = new Chart(
-                document.getElementById('myChart2'),
-                config2
-            );
+            this.carica();
 
 
         },
         dashboard: function () {
             this.section = 'dash';
-            setTimeout(() => {
-                //  this.loadChart();
-            }, 1000);
         },
         back: function (section) {
             this.section = section;
@@ -407,6 +509,8 @@ var app = new Vue({
 
                                 item.created_at = item.created_at.slice(0, 7);
 
+                                item.accettazione = Number(item.accettazione);
+
                                 var canoneMensile = item.Prezzo * 1.3 * item.Coefficiente / 100;
 
                                 var canoneTotale = canoneMensile * item.Mesi;
@@ -434,7 +538,7 @@ var app = new Vue({
                                 preventivo = {
                                     ...preventivo,
                                     month: month,
-                                    year: year,
+                                    year: Number(year),
                                 }
 
 

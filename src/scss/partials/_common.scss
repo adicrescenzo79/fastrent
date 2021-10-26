@@ -16,6 +16,10 @@ a {
     }
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .my-btn,
 a.my-btn {
     color: inherit;
@@ -51,7 +55,7 @@ a.my-btn {
     z-index: 10;
     .my-modal {
         background-color: #fff;
-        width: 30%;
+        width: 60%;
         padding: 20px 30px;
         border-radius: 10px;
         border: 1px solid $primary-color;
@@ -72,3 +76,8 @@ a.my-btn {
     }
 }
 
+@media (min-width: 992px) {
+    .my-modal {
+        width: 30%;
+    }
+}
